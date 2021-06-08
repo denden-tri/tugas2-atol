@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;1,100;1,200;1,300;1,500&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500&display=swap");
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    background: linear-gradient(to right top, #076585, #fff);
+}
+
+header{
+    top: 0px;
+    position: sticky;
+    display: inline;
+}
+.banner{
+    font-size: medium;
+}
+
+.banner a{
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.banner a:hover{
+    color: pink;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.view-menu{
+    margin: auto;
+    padding: 1rem;
+    min-height: 10vh;
+    display: flex;
+    box-shadow: 0px 10px 5px rgba(0, 0, 0, 0.5);
+    justify-content: space-between;
+    align-items: center;
+    background: #e75480;
+}
+
+.view-menu .inner-view{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-menu ul{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style: none;
+}
+
+.view-menu li{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.view-menu .link-list{
+    text-decoration: none;
+    color: black;
+}
+.view-menu .link-list:hover{
+    text-decoration: none;
+    color: pink;
+    font-weight: bold;
+}
+
+.view-menu .logout{
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+.view-menu .logout:hover{
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    color: #e75480;
+}
+
+.view-menu .btn-logout{
+    cursor: default;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.container{
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner-container{
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px #000000;
+    padding: 2rem;
+    background: grey;
+    border-radius: 8px;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
