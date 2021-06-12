@@ -1,10 +1,25 @@
 <?php
 session_start();
 if (!isset($_SESSION["user"])) {
+    if(!isset($_COOKIE["username"]) ) {
+        header("Location: /public/index.php?error=4");
+    }
     header("Location: /public/index.php?error=4");
-} ?>
+}?>
 
-<?php function logout()
+<?php 
+function encrypt($id, $passp, $iv){
+    $method = "aes-128-cbc";
+    return openssl_encrypt($id,$method, $passp,0,$iv);
+
+}
+
+function decrypt($id, $passp, $iv){
+    $method = "aes-128-cbc";
+    return openssl_decrypt($id,$method, $passp,0,$iv);
+}
+
+function logout()
 {
     session_destroy();
     setcookie("username", "", time() - 3600, "/public");

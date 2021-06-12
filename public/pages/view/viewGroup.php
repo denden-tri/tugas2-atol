@@ -1,6 +1,8 @@
 <?php
 include_once "../universal/universal.php";
 include_once "../universal/icon.php";
+include_once "../universal/fungsi.php";
+include_once "../function/groupFunction.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,13 +22,18 @@ include_once "../universal/icon.php";
             <?php navBar() ?>
         </header>
         <main class="container">
+            <?php
+            $halaman = 10;
+            $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
+            $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
+            $pages = getTotalHalaman("group") ?>
             <div class="inner-container">
                 <?php include_once "../../../component/mysqlconnect.php";
                 $db = dbConnect();
                 if ($db->connect_errno == 0) { ?>
                     <div class="search-container">
                         <form action="?search">
-                            <input type="text" class="input-cari" name="cari" id="cari" value="Cari nama group..." onFocus="this.value=''">
+                            <input type="text" class="input-cari" name="cari" id="cari" placeholder="Cari nama group..." onFocus="this.value=''">
                             <button type="submit" class="btn-cari">Cari</button>
                         </form>
                     </div>
@@ -41,130 +48,71 @@ include_once "../universal/icon.php";
                         <?php
                         if (isset($_GET["cari"])) {
                             $cari = isset($_GET["cari"]) ? (string) $_GET['cari'] : "";
+                            $res = cariDataGroup($cari, $mulai);
 
-                            $halaman = 10;
-                            $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
-                            $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
-                            $sql = "select * from group_name WHERE nama_group LIKE '%$cari%' limit $mulai,$halaman";
-                            $query = "select * from group_name";
-                            $total = $db->query($query);
-                            $pages = ceil($total->num_rows / $halaman);
-
-                            $res = $db->query($sql);
                             if ($res) { //query success
                                 $row = $res->fetch_row();
+                                $pageCari = ceil($res->num_rows / $halaman);
+                                $pages = ($pageCari >= 1) ? $pageCari : $pages;
+
                                 do {
-                                    list($id_group, $nama_group, $tgl_debut, $agensi) = $row;
-                                    echo "<tr><td>$id_group</td>";
-                                    echo "<td>$nama_group</td>";
-                                    echo "<td>$tgl_debut</td>";
-                                    echo "<td>$agensi</td>";
-                                    echo "<td colspan='2'><button name='delete'><a href='?halaman=$page&delete=$id_group'>Delete</a></button>";
-                                    echo "<button name='delete'><a href='?halaman=$page&edit=$id_group'>Edit</a></button></td></tr>";
+                                    tableGroup($row, $page);
                                 } while ($row = $res->fetch_row());
                             }
                         } else {
 
                             if (isset($_GET["add-data"])) {
-                                $nama_group = isset($_POST["nama-group"]) ? (string) $_POST["nama-group"] : null;
-                                $tgl_debut = isset($_POST["tgl-debut"]) ? (string) $_POST["tgl-debut"] : null;
-                                $agensi = isset($_POST["agensi"]) ? (string) $_POST["agensi"] : null;
+                                $nama_group = isset($_POST["nama-group"]) ? (string) $_POST["nama-group"] : "";
+                                $tgl_debut = isset($_POST["tgl-debut"]) ? (string) $_POST["tgl-debut"] : "";
+                                $agensi = isset($_POST["agensi"]) ? (string) $_POST["agensi"] : "";
 
-                                $sql = "SELECT MAX( id_group ) as maxi FROM group_name";
-                                $res = $db->query($sql);
-
-                                $row = $res->fetch_row();
-                                list($maxi) = $row;
-
-                                $sql = "ALTER TABLE group_name AUTO_INCREMENT = $maxi";
-                                $db->query($sql);
-
-                                $sql = "INSERT INTO group_name(nama_group, tgl_debut, agensi) VALUES ('$nama_group', STR_TO_DATE('$tgl_debut', '%Y-%m-%d'), '$agensi')";
-                                $db->query($sql);
-                                $halaman = 10;
-                                $query = "select * from group_album";
-                                $total = $db->query($query);
-                                $pages = ceil($total->num_rows / $halaman);
+                                addDataGroup($nama_group, $tgl_debut, $agensi);
                                 header("Location: viewGroup.php?halaman=$pages");
                             } else if (isset($_GET["add"])) {
-                                echo "<form method='post' action='?add-data'>";
-                                echo "<tr><td>Auto</td>";
-                                echo "<td><input type='text' name='nama-group'></input></td>"; ?>
-                                <td><input type="text" name="tgl-debut" value="yyyy-mm-dd" onFocus="this.value=''" /></td>
-                    <?php echo "<td><input type='text'name='agensi'></input></td>";
-                                echo "<td colspan='2'><button type='submit' name='add-btn'>Add Data</button>";
-                                echo "<button type='submit' name='cancel-btn'><a href='?'>Cancel</a></button></td></tr>";
-                                echo "</form>";
-                            } else {
+                        ?>
+                                <form method="POST" action="?add-data" id="add-data-form">
+                                    <tr>
+                                        <td>Auto</td>
+                                        <td><input type="text" name="nama-group" id="nama-group" required></input></td>
+                                        <td><input type="date" name="tgl-debut" placeholder="dd/mm/yyyy" id="tgl-debut" required /></td>
+                                        <td><input type='text' name='agensi' id="agensi" required></input></td>
+                                        <td colspan="2"><button type="submit" name="add-btn" id="add-btn">Add Data</button>
+                                            <button type="submit" name="cancel-btn"><a href="?">Cancel</a></button>
+                                        </td>
+                                    </tr>
+                                </form>
+                    <?php             } else {
 
                                 if (isset($_GET["delete"]) and isset($_GET["halaman"])) {
-                                    $id = isset($_GET["delete"]) ? (int) $_GET["delete"] : 0;
-                                    $query = "DELETE FROM group_name WHERE id_group = $id";
-                                    $db->query($query);
-                                    $halaman = 10;
-                                    $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
-                                    $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
-                                    $sql = "select * from group_name limit $mulai,$halaman";
-                                    $res = $db->query($sql);
-                                    $page = $res->num_rows < 1 ? $page = $page - 1 : $page;
+                                    $id = isset($_GET["delete"]) ? (string) $_GET["delete"] : 0;
+
+                                    deleteDataGroup($id);
+
+                                    $res = getDataGroup($mulai);
+
                                     header("Location: viewGroup.php?halaman=$page");
                                 }
                                 if (isset($_GET["save"])) {
-                                    $idSave = isset($_GET["save"]) ? (int) $_GET["save"] : null;
+                                    $idSave = isset($_GET["save"]) ? (string) $_GET["save"] : null;
+                                    $namaSave = isset($_POST["nama-group"]) ? (string) $_POST["nama-group"] : "";
+                                    $tglSave = isset($_POST["tgl-debut"]) ? (string) $_POST["tgl-debut"] : "";
+                                    $agensiSave = isset($_POST["agensi"]) ? (string) $_POST["agensi"] : "";
 
-                                    $sql = "select * from group_name where id_group = '$idSave'";
-                                    $res = $db->query($sql);
-
-                                    $row = $res->fetch_row();
-                                    list($id_group, $nama_group, $tgl_debut, $agensi) = $row;
-                                    $namaSave = isset($_POST["nama-group"]) ? (string) $_POST["nama-group"] : $nama_group;
-                                    $tglSave = isset($_POST["tgl-debut"]) ? (string) $_POST["tgl-debut"] : $tgl_debut;
-                                    $agensiSave = isset($_POST["agensi"]) ? (string) $_POST["agensi"] : $agensi;
-
-                                    $query = "UPDATE group_name SET nama_group = '$namaSave', tgl_debut = '$tglSave', agensi = '$agensiSave' WHERE id_group = '$idSave'";
-                                    $save = $db->query($query);
-                                    $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
+                                    saveEditGroup($idSave, $namaSave, $tglSave, $agensiSave);
                                     header("Location: viewGroup.php?halaman=$page");
                                 } else {
                                     if (isset($_GET["edit"]) and isset($_GET["halaman"])) {
-                                        $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
-                                        $id = (int) $_GET["edit"];
-                                        $sql = "select * from group_name where id_group = '$id'";
-                                        $res = $db->query($sql);
-
-                                        $row = $res->fetch_row();
-                                        list($id_group, $nama_group, $tgl_debut, $agensi) = $row;
-                                        echo "<form method='post' action='?halaman=$page&save=$id'>";
-                                        echo "<tr><td>$id_group</td>";
-                                        echo "<td><input type='text' name='nama-group' value='$nama_group'></input></td>";
-                                        echo "<td><input type='text' name='tgl-debut' value='$tgl_debut'></input></td>";
-                                        echo "<td><input type='text'name='agensi' value='$agensi'></input></td>";
-                                        echo "<td colspan='2'><button name='save' type='submit'>Save</button>";
-                                        echo "<button name='cancel'><a href='?halaman=$page'>Cancel</a></button></td></tr>";
-                                        echo "</form>";
+                                        $id = (string) $_GET["edit"];
+                                        tableEditGroup($id, $page);
                                     } else {
-                                        $halaman = 10;
-                                        $page = isset($_GET["halaman"]) ? (int) $_GET["halaman"] : 1;
-                                        $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
-                                        $sql = "select * from group_name limit $mulai,$halaman";
-                                        $query = "select * from group_name";
-                                        $total = $db->query($query);
-                                        $pages = ceil($total->num_rows / $halaman);
-
-                                        $res = $db->query($sql);
+                                        $res = getDataGroup($mulai);
                                         if ($res) { //query success
                                             $row = $res->fetch_row();
                                             do {
-                                                list($id_group, $nama_group, $tgl_debut, $agensi) = $row;
-                                                echo "<tr><td>$id_group</td>";
-                                                echo "<td>$nama_group</td>";
-                                                echo "<td>$tgl_debut</td>";
-                                                echo "<td>$agensi</td>";
-                                                echo "<td colspan='2'><button name='delete'><a href='?halaman=$page&delete=$id_group'>Delete</a></button>";
-                                                echo "<button name='delete'><a href='?halaman=$page&edit=$id_group'>Edit</a></button></td></tr>";
+                                                tableGroup($row, $page);
                                             } while ($row = $res->fetch_row());
                                         } else {
-                                            echo "Gagal Ekseksi SQL" . (DEVELOPMENT ? " : " . $db->error : "") . "<br>";
+                                            echo "Gagal Ekseksi SQL : $db->error <br>";
                                         }
                                     }
                                 }
@@ -208,6 +156,7 @@ include_once "../universal/icon.php";
             <?php } ?>
         </div>
     </footer>
+    <script src="../../asset/script/validation.js"></script>
 </body>
 
 </html>

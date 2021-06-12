@@ -2,7 +2,7 @@
 session_start();
 include_once "../public/pages/universal/icon.php";
 if (isset($_COOKIE["username"])) {
-    header("Location: pages/index-admin.php");
+    header("Location: pages/login.php");
 } else if (isset($_SESSION["user"])) {
     header("Location: pages/index-admin.php");
 }
@@ -52,10 +52,10 @@ if (isset($_COOKIE["username"])) {
                 <div class="form-item">
                     <form action="../public/pages/login.php" method="post">
                         <div class="form-field">
-                            <h3>Username</h3> <input type="text" name="username" class="input" value="<?php echo ($_SERVER["REMOTE_ADDR"] == "5.189.147.4" ? "admin" : ""); ?>"><br>
+                            <h3>Username</h3> <input type="text" name="username" class="input" value="<?php echo ($_SERVER["REMOTE_ADDR"] == "5.189.147.4" ? "admin" : ""); ?>" required><br>
                         </div>
                         <div class="form-field">
-                            <h3>Password</h3> <input type="password" name="password" class="input" value="<?php echo ($_SERVER["REMOTE_ADDR"] == "5.189.147.4" ? "admin_password" : ""); ?>"><br>
+                            <h3>Password</h3> <input type="password" name="password" class="input" value="<?php echo ($_SERVER["REMOTE_ADDR"] == "5.189.147.4" ? "admin_password" : ""); ?>" required><br>
                         </div>
                         <div class="form-field">
                             <input type="checkbox" name="remember" value="1">Remember me for 30 days</input>

@@ -43,7 +43,12 @@ input{
     display: flex;
     justify-content: center;
     align-items : center;
-    background: linear-gradient(to right top, #076585, #fff);
+    /* background: linear-gradient(to right top, #076585, #fff); */
+    background: url("/public/asset/img/background.png");
+    background-size: contain;
+    background-position: center;
+    /* background-size: cover; */
+    background-repeat: repeat;
 }
 
 .inner-container{

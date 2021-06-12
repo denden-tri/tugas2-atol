@@ -11,10 +11,10 @@ if ($db->connect_errno == 0) {
         setcookie($user_cookie, $user, time() + 60 * 60 * 24 * 30, "/public");
         setcookie($pass_cookie, $pass, time() + 60 * 60 * 24 * 30, "/public");
     }
-    if (isset($_POST["btnLogin"])) {
-        $username = $db->escape_string($_POST["username"]);
-        $password = $db->escape_string($_POST["password"]);
-        $sql = "SELECT user_name, user_password FROM user_data WHERE user_name = '$username' AND user_password = SHA1('$password')";
+    if (isset($_POST["btnLogin"]) or isset($_COOKIE["username"])) {
+        $username = isset($_COOKIE["username"]) ? (string) $_COOKIE["username"] : $db->escape_string($_POST["username"]);
+        $password = isset($_COOKIE["password"]) ? (string) $_COOKIE["password"] : sha1($db->escape_string($_POST["password"]));
+        $sql = "SELECT user_name, user_password FROM user_data WHERE user_name = '$username' AND user_password = '$password'";
 
         $res = $db->query($sql);
         $row = $res->fetch_row();
@@ -23,6 +23,9 @@ if ($db->connect_errno == 0) {
                 list($user_name) = $row;
                 session_start();
                 $_SESSION["user"] = $user_name;
+
+                $_SESSION["passp"] = openssl_random_pseudo_bytes(16);
+                $_SESSION["iv"] = openssl_random_pseudo_bytes(16);
                 header("Location: index-admin.php");
             } else {
                 header("Location: ../index.php?error=1");
