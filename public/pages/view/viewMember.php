@@ -79,7 +79,7 @@ include_once "../function/memberFunction.php";
                             }
                             if (isset($_GET["save"])) {
                                 $idSave = isset($_GET["save"]) ? (string) $_GET["save"] : null;
-                                $id_groupSave = isset($_POST["id-group"]) ? (int) $_POST["id-group"] : "";
+                                $id_groupSave = isset($_POST["id-group"]) ? (string) $_POST["id-group"] : "";
                                 $nama_memberSave = isset($_POST["nama-member"]) ? (string) $_POST["nama-member"] : "";
                                 $tgl_lahirSave = isset($_POST["tgl-lahir"]) ? (string) $_POST["tgl-lahir"] : "";
 
@@ -88,7 +88,7 @@ include_once "../function/memberFunction.php";
                             } else {
                                 if (isset($_GET["edit"]) and isset($_GET["halaman"])) {
                                     $id = (string) $_GET["edit"];
-                                    tableEditMember($d, $page);
+                                    tableEditMember($id, $page);
                                 } else {
                                     $res = getDataMember($mulai);
                                     if ($res) { //query success

@@ -47,7 +47,7 @@ function formAddGroup()
     <form method="POST" action="?add-data" id="add-data-form">
         <tr>
             <td>Auto</td>
-            <td><input type="text" name="nama-group" id="nama-group" oninvalid="erroMessage(this)" oninput="erroMessage(this)" required></input></td>
+            <td><input type="text" name="nama-group" id="nama-group" required></input></td>
             <td><input type="date" name="tgl-debut" placeholder="dd/mm/yyyy" id="tgl-debut" required/></td>
             <td><input type='text' name='agensi' id="agensi" required></input></td>
             <td colspan="2"><button type="submit" name="add-btn">Add Data</button>
@@ -84,9 +84,9 @@ function tableEditGroup($id, $page)
     list($id_group, $nama_group, $tgl_debut, $agensi) = $row; ?>
     <form method='POST' action='?halaman=<?php echo $page?>&save=<?php echo $id = urlencode(encrypt($id, $_SESSION["passp"],$_SESSION["iv"]))?>'>
     <tr><td><?php echo $id_group ?></td>
-    <td><input type='text' name='nama-group' value='<?php echo $nama_group ?>'></input></td>
-    <td><input type='text' name='tgl-debut' value='<?php echo $tgl_debut ?>'></input></td>
-    <td><input type='text'name='agensi' value='<?php echo $agensi ?>'></input></td>
+    <td><input type='text' name='nama-group' value='<?php echo $nama_group ?>' required></input></td>
+    <td><input type='text' name='tgl-debut' value='<?php echo $tgl_debut ?>' required></input></td>
+    <td><input type='text'name='agensi' value='<?php echo $agensi ?>' required></input></td>
     <td colspan='2'><button name='save' type='submit'>Save</button>
     <button name='cancel'><a href='?halaman=<?php echo $page ?>'>Cancel</a></button></td></tr>
     </form>

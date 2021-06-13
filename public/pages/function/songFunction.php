@@ -91,9 +91,9 @@ function tableEditSong($id, $page)
     <form method='post' action='?halaman=<?php echo $page ?>&save=<?php echo $id = urlencode(encrypt($id, $_SESSION["passp"], $_SESSION["iv"])) ?>'>
         <tr>
             <td><?php echo $id_song ?></td>
-            <td><input type='text' name='id-group' value='<?php echo $id_group ?>'></input></td>
-            <td><input type='text' name='id-album' value='<?php echo $id_album ?>'></input></td>
-            <td><input type='text' name='title-song' value='<?php echo $title_song ?>'></input></td>
+            <td><input type='text' name='id-group' value='<?php echo $id_group ?>' required></input></td>
+            <td><input type='text' name='id-album' value='<?php echo $id_album ?>' required></input></td>
+            <td><input type='text' name='title-song' value='<?php echo $title_song ?>' required></input></td>
             <td><select name='main-track' value='<?php echo $mainBool ?>'>
                     <option value='1'>TRUE</option>
                     <option value='0'>FALSE</option>
@@ -114,10 +114,10 @@ function saveEditSong($idSave, $id_groupSave, $id_albumSave, $judulSave, $trackS
 
     $row = $res->fetch_row();
     list($id_song, $id_group, $id_album, $title_song, $main_track) = $row;
-    $id_groupSave = $id_groupSave ? $id_groupSave : $id_group;
-    $id_albumSave = $id_albumSave ? $id_albumSave : $id_album;
-    $judulSave = $judulSave ? $judulSave : $title_song;
-    $trackSave = $trackSave ? $trackSave : $main_track;
+    $id_groupSave = $id_groupSave != "" ? $id_groupSave : $id_group;
+    $id_albumSave = $id_albumSave != "" ? $id_albumSave : $id_album;
+    $judulSave = $judulSave != "" ? $judulSave : $title_song;
+    $trackSave = $trackSave != "" ? $trackSave : $main_track;
 
     $query = "UPDATE group_song SET id_group = $id_groupSave, id_album = $id_albumSave, title_song = '$judulSave', main_track = $trackSave WHERE id_song = '$idSave'";
     $db->query($query);

@@ -8,8 +8,8 @@ if ($db->connect_errno == 0) {
         $pass_cookie = "password";
         $pass = sha1((string) $_POST["password"]);
         $user = (string) $_POST["username"];
-        setcookie($user_cookie, $user, time() + 60 * 60 * 24 * 30, "/public");
-        setcookie($pass_cookie, $pass, time() + 60 * 60 * 24 * 30, "/public");
+        setcookie($user_cookie, $user, time() + 60 * 60 * 24 * 30, "/");
+        setcookie($pass_cookie, $pass, time() + 60 * 60 * 24 * 30, "/");
     }
     if (isset($_POST["btnLogin"]) or isset($_COOKIE["username"])) {
         $username = isset($_COOKIE["username"]) ? (string) $_COOKIE["username"] : $db->escape_string($_POST["username"]);

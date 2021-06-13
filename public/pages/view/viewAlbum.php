@@ -83,10 +83,10 @@ include_once "../function/albumFunction.php";
                             }
                             if (isset($_GET["save"])) {
                                 $idSave = isset($_GET["save"]) ? (string) $_GET["save"] : null;
-                                $idGroupSave = isset($_GET["id-group"]) ? (string) $_GET["id-group"] : "";
-                                $titleSave = isset($_GET["title-album"]) ? (string) $_GET["title-album"] : "";
-                                $jenisSave = isset($_GET["jenis"]) ? (string) $_GET["jenis"] : "";
-                                $tglSave = isset($_GET["tgl-rilis"]) ? (string) $_GET["tgl-rilis"] : "";
+                                $idGroupSave = isset($_POST["id-group"]) ? (string) $_POST["id-group"] : "";
+                                $titleSave = isset($_POST["title-album"]) ? (string) $_POST["title-album"] : "";
+                                $jenisSave = isset($_POST["jenis"]) ? (string) $_POST["jenis"] : "";
+                                $tglSave = isset($_POST["tgl-rilis"]) ? (string) $_POST["tgl-rilis"] : "";
 
                                 saveEditAlbum($idSave, $idGroupSave, $titleSave, $jenisSave, $tglSave);
                                 header("Location: viewAlbum.php?halaman=$page");

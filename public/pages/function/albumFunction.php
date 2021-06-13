@@ -93,7 +93,7 @@ function formAddAlbum()
                 <td><input type="text" name="id-group" value="<?php echo $id_group ?>" required/></td>
                 <td><input type='text' name='title-album' value='<?php echo $title_album ?>' required /></td>
                 <td><select name='jenis' required>
-                        <option value='$jenis'><?php echo $jenis ?></option>
+                        <option value='<?php echo $jenis ?>'><?php echo $jenis ?></option>
                         <option value='Mini Album'>Mini Album</option>
                         <option value='Full Album'>Full Album</option>
                     </select></td>
@@ -109,7 +109,7 @@ function formAddAlbum()
     {
         $db = dbConnect();
         $idSave = (int) decrypt($idSave, $_SESSION["passp"], $_SESSION["iv"]);
-        $sql = "SELECT id_group, title_album, jenis, tgl_lahir FROM group_album WHERE id_album = '$idSave'";
+        $sql = "SELECT id_group, title_album, jenis, tgl_rilis FROM group_album WHERE id_album = '$idSave'";
         $res = $db->query($sql);
 
         $row = $res->fetch_row();

@@ -28,6 +28,7 @@ header{
     position: sticky;
     display: inline;
 }
+
 .banner{
     font-size: medium;
 }
@@ -101,6 +102,12 @@ header{
     border: none;
     border-radius: 5px;
     padding: 3px;
+}
+
+.view-menu .inner-view .option{
+    font-size: medium;
+    font-weight: bold;
+    color: black;
 }
 
 .container{

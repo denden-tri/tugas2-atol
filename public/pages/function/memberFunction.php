@@ -5,7 +5,7 @@
 function getDataMember($mulai)
 {
     $db = dbConnect();
-    $sql = "SELECT * FROM group_member  ORDER BY id_member LIMIT $mulai, 10";
+    $sql = "SELECT * FROM group_member ORDER BY id_name LIMIT $mulai, 10";
     $res = $db->query($sql);
     return $res;
 }
@@ -22,14 +22,14 @@ function deleteDataMember($id)
 {
     $id = (int) decrypt($id, $_SESSION["passp"], $_SESSION["iv"]);
     $db = dbConnect();
-    $sql = "DELETE FROM group_member WHERE id_member = $id";
+    $sql = "DELETE FROM group_member WHERE id_name = $id";
     $db->query($sql);
 }
 
 function addDataMember($id_group, $nama_member, $tgl_lahir)
 {
     $db = dbConnect();
-    $sql = "SELECT MAX( id_member ) AS maxi FROM group_member";
+    $sql = "SELECT MAX( id_name ) AS maxi FROM group_member";
     $res = $db->query($sql);
 
     $row = $res->fetch_row();
@@ -38,7 +38,7 @@ function addDataMember($id_group, $nama_member, $tgl_lahir)
     $sql = "ALTER TABLE group_member AUTO_INCREMENT = $maxi";
     $db->query($sql);
 
-    $sql = "INSERT INTO group_member(id_group, nama_member, tgl_lahir,) VALUES ('$id_group', '$nama_member', STR_TO_DATE('$tgl_lahir', '%Y-%m-%d'))";
+    $sql = "INSERT INTO group_member(id_group, nama_member, tgl_lahir) VALUES ('$id_group', '$nama_member', STR_TO_DATE('$tgl_lahir', '%Y-%m-%d'))";
     $db->query($sql);
 }
 
@@ -67,7 +67,7 @@ function tableMember($row, $page)
         <td><?php echo $nama_member ?></td>
         <td><?php echo $tgl_lahir ?></td>
         <?php $id_name = urlencode(encrypt($id_name, $_SESSION["passp"], $_SESSION["iv"])) ?>
-        <td colspan='2'><button name='delete'><a href='?halaman=<?php echo $page ?>&delete=<?php echo $id_group ?>'>Delete</a></button>
+        <td colspan='2'><button name='delete'><a href='?halaman=<?php echo $page ?>&delete=<?php echo $id_name ?>'>Delete</a></button>
             <button name='delete'><a href='?halaman=<?php echo $page ?>&edit=<?php echo $id_name ?>'>Edit</a></button>
         </td>
     </tr>
@@ -77,7 +77,7 @@ function tableEditMember($id, $page)
 {
     $db = dbConnect();
     $id = (int) decrypt($id, $_SESSION["passp"], $_SESSION["iv"]);
-    $sql = "SELECT * from group_member where id_group = '$id'";
+    $sql = "SELECT * from group_member where id_name = '$id'";
     $res = $db->query($sql);
 
     $row = $res->fetch_row();
@@ -86,9 +86,9 @@ function tableEditMember($id, $page)
     <form method='POST' action='?halaman=<?php echo $page ?>&save=<?php echo $id = urlencode(encrypt($id, $_SESSION["passp"], $_SESSION["iv"])) ?>'>
         <tr>
             <td><?php echo $id_name ?></td>
-            <td><input type='text' name='nama-member' value='<?php echo $id_group ?>'></input></td>
-            <td><input type='text' name='nama-group' value='<?php echo $nama_member ?>'></input></td>
-            <td><input type='text' name='tgl-lahir' value='<?php echo $tgl_lahir ?>'></input></td>
+            <td><input type='text' name='id-group' value='<?php echo $id_group ?>' required></input></td>
+            <td><input type='text' name='nama-member' value='<?php echo $nama_member ?>' required></input></td>
+            <td><input type='text' name='tgl-lahir' value='<?php echo $tgl_lahir ?>' required></input></td>
             <td colspan='2'><button name='save' type='submit'>Save</button>
                 <button name='cancel'><a href='?halaman=<?php echo $page ?>'>Cancel</a></button>
             </td>
@@ -100,16 +100,16 @@ function saveEditMember($idSave,$idGroupSave, $namaSave, $tglSave)
 {
     $db = dbConnect();
     $idSave = (int) decrypt($idSave, $_SESSION["passp"], $_SESSION["iv"]);
-    $sql = "SELECT id_group, nama_member, tgl_lahir FROM group_member WHERE id_member = '$idSave'";
+    $sql = "SELECT id_group, nama_member, tgl_lahir FROM group_member WHERE id_name = $idSave";
     $res = $db->query($sql);
 
     $row = $res->fetch_row();
     list($id_group, $nama_member, $tgl_lahir) = $row;
-    $idGroupSave = $idGroupSave != "" ? $idGroupSave:$id_group;
-    $namaSave = $namaSave != "" ? $namaSave : $nama_member;
-    $tglSave = $tglSave != "" ? $tglSave : $tgl_lahir;
+    $idGroupSave = $idGroupSave != "" ? $idGroupSave : (string) $id_group;
+    $namaSave = $namaSave != "" ? $namaSave : (string) $nama_member;
+    $tglSave = $tglSave != "" ? $tglSave : (string) $tgl_lahir;
 
-    $query = "UPDATE group_member SET id_group = '$idGroupSave',nama_member = '$namaSave', tgl_lahir = '$tglSave' WHERE id_group = '$idSave'";
+    $query = "UPDATE group_member SET id_group = '$idGroupSave',nama_member = '$namaSave', tgl_lahir = '$tglSave' WHERE id_name = '$idSave'";
     $db->query($query);
 }
 

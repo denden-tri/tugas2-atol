@@ -156,7 +156,6 @@ include_once "../function/groupFunction.php";
             <?php } ?>
         </div>
     </footer>
-    <script src="../../asset/script/validation.js"></script>
 </body>
 
 </html>

@@ -1,10 +1,10 @@
 <?php
 session_start();
-include_once "../public/pages/universal/icon.php";
+include_once "pages/universal/icon.php";
 if (isset($_COOKIE["username"])) {
-    header("Location: pages/login.php");
+    header("Location: /pages/login.php");
 } else if (isset($_SESSION["user"])) {
-    header("Location: pages/index-admin.php");
+    header("Location: /pages/index-admin.php");
 }
 ?>
 <?php include_once "../component/mysqlconnect.php"; ?>
@@ -50,7 +50,7 @@ if (isset($_COOKIE["username"])) {
             ?>
             <div class="form-container">
                 <div class="form-item">
-                    <form action="../public/pages/login.php" method="post">
+                    <form action="/pages/login.php" method="post">
                         <div class="form-field">
                             <h3>Username</h3> <input type="text" name="username" class="input" value="<?php echo ($_SERVER["REMOTE_ADDR"] == "5.189.147.4" ? "admin" : ""); ?>" required><br>
                         </div>
